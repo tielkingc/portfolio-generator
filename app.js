@@ -1,14 +1,6 @@
 const inquirer = require('inquirer');
-// const fs = require('fs')
-// const generatePage = require('./src/page-template.js');
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('index.html', pageHTML, err => {
-//     if (err) throw err;
-
-//     console.log('Portfolio complete! Check out index.html to see the output!');
-// });
+const fs = require('fs')
+const generatePage = require('./src/page-template.js');
 
 const prompyUser = () => {
     return inquirer.prompt([
@@ -48,7 +40,7 @@ const prompyUser = () => {
         type: 'input',
         name: 'about',
         message: 'Provide some information about yourself:',
-        when: ({ confirmAbout }) => {
+        when: ({confirmAbout}) => {
             if (confirmAbout) {
                 return true;
             } else {
@@ -142,7 +134,11 @@ const promptProject = portfolioData => {
 
 prompyUser()
     .then(promptProject)
-    
-    //.then(projectAnswers => console.log(projectAnswers))
-    
-    .then(portfolioData => console.log(portfolioData));
+    .then(portfolioData => {
+        const pageHTML = generatePage(portfolioData);
+
+        fs.writeFile('index.html', pageHTML, err => {
+            if (err) throw err;
+        })
+        //.then(projectAnswers => console.log(projectAnswers))
+    });
